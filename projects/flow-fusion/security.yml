@@ -4,19 +4,21 @@
 
   vars:
     project_code_name: flow-fusion
-    host_ip: "192.168.150.10"
-    host_netmask: "255.255.255.0"
+    project_state: present
+    db_host_ip: "192.168.150.10"
+    db_host_netmask: "255.255.255.0"
 
 
   tasks:
-    - name: Create/Update/Delete Check Point host objects for inventory hosts
+    - name: Create/Update/Delete Check Point host objects
       check_point.mgmt.cp_mgmt_host:
         auto_publish_session: True
-        name: "{{ inventory_hostname }}"
-        ipv4_address: "{{ interfaces | selectattr('primary') | map(attribute='ipv4_address') | list | first }}"
-        nat_settings: "{{ firewall.nat_settings | default({'auto_rule' : 'no'}) }}"
-        groups: "{{ firewall.groups | default([]) }}"
-        color: "{{ firewall.color | default(zone_color) }}"
-        comments: "{{ ansible_managed }} - {{ name }}"
+        name: "{{ project_code_name }}-db"
+        ipv4_address: "{{ db_host_ip }}"
+        nat_settings:
+          auto_rule' : 'no'
+        color: "forestgreen"
+        comments: "{{ ansible_managed }} - {{ project_code_name }}"
+        groups: []
 
-        state: "{{ firewall.state }}"
+        state: "{{ project_state }}"
