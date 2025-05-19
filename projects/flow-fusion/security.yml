@@ -1,6 +1,7 @@
 ---
 - name: Manage Firewall
   hosts: demo-aap-checkpoint-smartcenter-api
+  gather_facts: False
 
   vars:
     project_code_name: flow-fusion
