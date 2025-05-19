@@ -1,6 +1,6 @@
 ---
 - name: Manage Firewall
-  hosts: localhost
+  hosts: demo-aap-checkpoint-smartcenter-api
 
   vars:
     project_code_name: flow-fusion
