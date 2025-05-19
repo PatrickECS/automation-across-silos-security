@@ -1,0 +1,4 @@
+---
+- name: Update firewall for new application
+  import_playbook: playbook-update-firewall-rules.yml
+ 
