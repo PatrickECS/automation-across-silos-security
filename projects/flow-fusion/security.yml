@@ -1,0 +1,22 @@
+---
+- name: Manage Firewall
+  hosts: localhost
+
+  vars:
+    project_code_name: flow-fusion
+    host_ip: "192.168.150.10"
+    host_netmask: "255.255.255.0"
+
+
+  tasks:
+    - name: Create/Update/Delete Check Point host objects for inventory hosts
+      check_point.mgmt.cp_mgmt_host:
+        auto_publish_session: True
+        name: "{{ inventory_hostname }}"
+        ipv4_address: "{{ interfaces | selectattr('primary') | map(attribute='ipv4_address') | list | first }}"
+        nat_settings: "{{ firewall.nat_settings | default({'auto_rule' : 'no'}) }}"
+        groups: "{{ firewall.groups | default([]) }}"
+        color: "{{ firewall.color | default(zone_color) }}"
+        comments: "{{ ansible_managed }} - {{ name }}"
+
+        state: "{{ firewall.state }}"

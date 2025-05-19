@@ -1,4 +1,4 @@
 ---
-- name: Update firewall for new application
-  import_playbook: playbook-update-firewall-rules.yml
+- name: Import Flow-Fusion Project Playbooks
+  import_playbook: projects/flow-fusion/security.yml
  

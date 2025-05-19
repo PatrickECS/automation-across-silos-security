@@ -1,7 +1,0 @@
----
-- name: this is just a test
-  hosts: localhost
-  tasks:
-    - name: ping localhost
-      ansible.builtin.setup:
-
