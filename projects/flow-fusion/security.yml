@@ -9,7 +9,7 @@
     db_host_netmask: "255.255.255.0"
 
   vars_files: 
-    - name: "host_vars/demo-aap-checkpoint-smartcenter-api.yml"
+    - "host_vars/demo-aap-checkpoint-smartcenter-api.yml"
 
   tasks:
     - name: Create/Update/Delete Check Point host objects
