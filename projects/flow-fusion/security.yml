@@ -17,7 +17,7 @@
         ipv4_address: "{{ db_host_ip }}"
         nat_settings:
           auto_rule' : 'no'
-        color: "forestgreen"
+        color: "forest green"
         comments: "Project {{ project_code_name }}"
         groups: []
 
