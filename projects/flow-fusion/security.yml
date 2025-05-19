@@ -15,8 +15,7 @@
         auto_publish_session: True
         name: "{{ project_code_name }}-db"
         ipv4_address: "{{ db_host_ip }}"
-        nat_settings:
-          auto_rule' : 'no'
+        nat_settings: {}
         color: "forest green"
         comments: "Project {{ project_code_name }}"
         groups: []
