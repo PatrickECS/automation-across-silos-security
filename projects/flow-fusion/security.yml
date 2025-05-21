@@ -9,6 +9,7 @@
     db_host_ip: "192.168.150.10"
     db_host_snat_ip: "172.27.55.221"
     db_host_netmask: "255.255.255.0"
+    install_access_policy: true
 
   tasks:
 
@@ -30,7 +31,8 @@
 
         state: "{{ project_state }}"
 
-  handlers:
-
-    - name: Publish Changes
-      check_point.mgmt.cp_mgmt_publish:
+    - name: Install Access Policy
+      cp_mgmt_install_policy:
+        access: true
+        policy_package: Standard
+      when: install_access_policy is true
