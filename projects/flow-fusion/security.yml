@@ -1,6 +1,6 @@
 ---
 - name: Manage Firewall
-  hosts: demo-aap-checkpoint-smartcenter-api
+  hosts: smartcenter-api
   gather_facts: False
 
   vars:
@@ -8,9 +8,6 @@
     project_state: present
     db_host_ip: "192.168.150.10"
     db_host_netmask: "255.255.255.0"
-
-  vars_files: 
-    - "host_vars/demo-aap-checkpoint-smartcenter-api.yml"
 
   tasks:
 
