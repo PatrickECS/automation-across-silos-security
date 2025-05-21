@@ -13,6 +13,12 @@
     - "host_vars/demo-aap-checkpoint-smartcenter-api.yml"
 
   tasks:
+
+    - name: Debug
+      ansible.builtin.debug:
+        msg: Running Debug Steps
+      #when: "{{ deploy_to_prod }} is false"
+
     - name: Create/Update/Delete Check Point host objects
       check_point.mgmt.cp_mgmt_host:
         auto_publish_session: True
