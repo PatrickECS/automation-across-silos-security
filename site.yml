@@ -1,4 +1,4 @@
 ---
-- name: Import Flow-Fusion Project Playbooks
+- name: Import Flow-Fusion Project Playbooks - Security
   import_playbook: projects/flow-fusion/security.yml
  
