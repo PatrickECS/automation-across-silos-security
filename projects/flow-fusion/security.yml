@@ -43,7 +43,7 @@
         - Publish Changes
         - Install Access Policy
 
-    - name: add-access-rule
+    - name: add-access-rule for ssh
       check_point.mgmt.cp_mgmt_access_rule:
         layer: Network
         name: Allow SSH Access for Admins
@@ -59,6 +59,29 @@
           - "{{ project_code_name }}-db"
         service:
           - ssh_version_2
+        comments: "This rule is managed by Ansible"
+        vpn: Any
+        state: "{{ project_state }}"
+      notify: 
+        - Publish Changes
+        - Install Access Policy
+
+    - name: add-access-rule for mysql
+      check_point.mgmt.cp_mgmt_access_rule:
+        layer: Network
+        name: Allow MySQL Access for Frontend
+        relative_position:
+          below: "{{ project_code_name }} Rules"
+        enabled: true
+        action: Accept
+        track:
+          type: Log
+        source:
+          - "Any"
+        destination:
+          - "{{ project_code_name }}-db"
+        service:
+          - MySQL
         comments: "This rule is managed by Ansible"
         vpn: Any
         state: "{{ project_state }}"
