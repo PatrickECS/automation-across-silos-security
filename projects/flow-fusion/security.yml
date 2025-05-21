@@ -18,7 +18,6 @@
 
     - name: Create/Update/Delete Check Point host object for Database
       check_point.mgmt.cp_mgmt_host:
-        auto_publish_session: True
         name: "{{ project_code_name }}-db"
         ipv4_address: "{{ db_host_ip }}"
         nat_settings:
@@ -28,11 +27,44 @@
         color: "forest green"
         comments: "Project {{ project_code_name }}"
         groups: []
-
         state: "{{ project_state }}"
+      notify: 
+        - Publish Changes
+        - Install Access Policy
+
+    - name: Create a new rule section for the project's rules
+      check_point.mgmt.cp_mgmt_access_section:
+        name: "{{ project_code_name }} Rules"
+        layer: "Network"
+        relative_position:
+          below: "Automation Rules"
+        state: "{{ project_state }}"
+      notify: 
+        - Publish Changes
+        - Install Access Policy
+
+    - name: add-access-rule
+      check_point.mgmt.cp_mgmt_access_rule:
+        layer: Network
+        name: Allow SSH Access for Admins
+        relative_position:
+          below: "{{ project_code_name }} Rules"
+        action: Accept
+        service:
+          - ssh_version_2
+        vpn: All_GwToGw
+        state: "{{ project_state }}"
+      notify: 
+        - Publish Changes
+        - Install Access Policy
+
+  handler:
+
+    - name: Publish Changes
+      check_point.mgmt.cp_mgmt_publish:
 
     - name: Install Access Policy
-      cp_mgmt_install_policy:
+      check_point.mgmt.cp_mgmt_install_policy:
         access: true
         policy_package: Standard
       when: install_access_policy is true
