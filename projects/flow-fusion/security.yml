@@ -14,12 +14,7 @@
 
   tasks:
 
-    - name: Debug
-      ansible.builtin.debug:
-        msg: Running Debug Steps
-      #when: "{{ deploy_to_prod }} is false"
-
-    - name: Create/Update/Delete Check Point host objects
+    - name: Create/Update/Delete Check Point host object for Database
       check_point.mgmt.cp_mgmt_host:
         auto_publish_session: True
         name: "{{ project_code_name }}-db"
