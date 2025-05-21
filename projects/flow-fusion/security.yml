@@ -58,7 +58,7 @@
         - Publish Changes
         - Install Access Policy
 
-  handler:
+  handlers:
 
     - name: Publish Changes
       check_point.mgmt.cp_mgmt_publish:
