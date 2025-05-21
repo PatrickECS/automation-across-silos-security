@@ -49,10 +49,18 @@
         name: Allow SSH Access for Admins
         relative_position:
           below: "{{ project_code_name }} Rules"
+        enabled: true
         action: Accept
+        track:
+          type: Log
+        source:
+          - "n.internal.192.168.206.1-24"
+        destination:
+          - "{{ project_code_name }}-db"
         service:
           - ssh_version_2
-        vpn: All_GwToGw
+        comments: "This rule is managed by Ansible"
+        vpn: Any
         state: "{{ project_state }}"
       notify: 
         - Publish Changes
