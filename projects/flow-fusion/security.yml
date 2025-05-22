@@ -28,6 +28,8 @@
         color: "forest green"
         comments: "Project {{ project_code_name }}"
         groups: []
+        ignore_errors: true
+        ignore_warnings: true
         state: "{{ project_state }}"
       notify: 
         - Publish Changes
