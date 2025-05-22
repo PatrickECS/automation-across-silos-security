@@ -30,7 +30,8 @@
 
     - name: Delete all rules where the host object is used
       check_point.mgmt.cp_mgmt_access_rule:
-        uid: "{{ item.rule }}"
+        name: "{{ item.name }}"
+        position: "{{ item.position }}"
         state: absent
       loop: "{{ usage_info['where-used']['used-directly']['access-control-rules'] }}"
 
