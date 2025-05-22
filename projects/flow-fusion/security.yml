@@ -65,7 +65,7 @@
 
     - name: Create a new rule section for the project's rules
       check_point.mgmt.cp_mgmt_access_section:
-        name: "[{{ deploy_env }}] - {{ project_code_name }}-{{ deploy_env }} Rules"
+        name: "[{{ deploy_env }}] - {{ project_code_name }} Rules"
         layer: "Network"
         relative_position:
           below: "Automation Rules"
