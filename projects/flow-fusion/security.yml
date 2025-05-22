@@ -32,13 +32,13 @@
       block:
         - name: Get a list of rules, where this object is used
           check_point.mgmt.cp_mgmt_where_used:
-            name: "{{ project_code_name }}-db"
+            name: "{{ project_code_name }}-db-{{ deploy_env }}"
             details_level: standard
           register: usage_info
 
         - name: Delete all rules where this object is used
           check_point.mgmt.cp_mgmt_access_rule:
-            name: "{{ item.rule.name }}"
+            name: "[{{ deploy_env }}] - {{ item.rule.name }}"
             layer: "{{ item.layer.name }}"
             position: "{{ item.position }}"
             state: absent
@@ -47,11 +47,11 @@
 
     - name: Manage Check Point host object for database
       check_point.mgmt.cp_mgmt_host:
-        name: "{{ project_code_name }}-db"
-        ipv4_address: "{{ db_data[environment]['db_host_ip'] }}"
+        name: "{{ project_code_name }}-db-{{ deploy_env }}"
+        ipv4_address: "{{ db_data[deploy_env]['db_host_ip'] }}"
         nat_settings:
           auto_rule: True
-          ip_address: "{{ db_data[environment]['db_host_snat_ip'] }}"
+          ip_address: "{{ db_data[deploy_env]['db_host_snat_ip'] }}"
           method: static
         color: "forest green"
         comments: "Project {{ project_code_name }}"
@@ -65,7 +65,7 @@
 
     - name: Create a new rule section for the project's rules
       check_point.mgmt.cp_mgmt_access_section:
-        name: "{{ project_code_name }} Rules"
+        name: "[{{ deploy_env }}] - {{ project_code_name }}-{{ deploy_env }} Rules"
         layer: "Network"
         relative_position:
           below: "Automation Rules"
@@ -80,9 +80,9 @@
         - name: add-access-rule for ssh
           check_point.mgmt.cp_mgmt_access_rule:
             layer: Network
-            name: Allow SSH Access for Admins
+            name: "[{{ deploy_env }}] - Allow SSH Access for Admins"
             relative_position:
-              below: "{{ project_code_name }} Rules"
+              below: "[{{ deploy_env }}] - {{ project_code_name }} Rules"
             enabled: true
             action: Accept
             track:
@@ -90,7 +90,7 @@
             source:
               - "n.internal.192.168.206.1-24"
             destination:
-              - "{{ project_code_name }}-db"
+              - "{{ project_code_name }}-db-{{ deploy_env }}"
             service:
               - ssh_version_2
             comments: "This rule is managed by Ansible"
@@ -103,9 +103,9 @@
         - name: add-access-rule for mysql
           check_point.mgmt.cp_mgmt_access_rule:
             layer: Network
-            name: Allow MySQL Access for Frontend
+            name: "[{{ deploy_env }}] - Allow MySQL Access for Frontend"
             relative_position:
-              below: "{{ project_code_name }} Rules"
+              below: "[{{ deploy_env }}] - {{ project_code_name }} Rules"
             enabled: true
             action: Accept
             track:
@@ -113,7 +113,7 @@
             source:
               - "Any"
             destination:
-              - "{{ project_code_name }}-db"
+              - "{{ project_code_name }}-db-{{ deploy_env }}"
             service:
               - MySQL
             comments: "This rule is managed by Ansible"
