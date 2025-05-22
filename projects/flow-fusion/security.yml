@@ -6,16 +6,10 @@
   vars:
     project_code_name: flow-fusion
     project_state: present
-
-    db_data:
-      stage:
-        db_host_ip: "192.168.150.10"
-        db_host_snat_ip: "172.27.55.221"
-        db_host_netmask: "255.255.255.0"
-      prod:
-        db_host_ip: "192.168.150.20"
-        db_host_snat_ip: "172.27.55.222"
-        db_host_netmask: "255.255.255.0"
+    
+    db_host_ip: "192.168.150.10"
+    db_host_snat_ip: "172.27.55.221"
+    db_host_netmask: "255.255.255.0"
     install_access_policy: true
 
   tasks:
@@ -44,10 +38,10 @@
     - name: Manage Check Point host object for database
       check_point.mgmt.cp_mgmt_host:
         name: "{{ project_code_name }}-db"
-        ipv4_address: "{{ db_data[environment]['db_host_ip'] }}"
+        ipv4_address: "{{ db_host_ip }}"
         nat_settings:
           auto_rule: True
-          ip_address: "{{ db_data[environment]['db_host_snat_ip'] }}"
+          ip_address: "{{ db_host_snat_ip }}"
           method: static
         color: "forest green"
         comments: "Project {{ project_code_name }}"
