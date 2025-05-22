@@ -17,6 +17,15 @@
       check_point.mgmt.cp_mgmt_show_api_versions:
       register: ckp_api_version_information
 
+    - name: Get host object details if project is absent
+      cp_mgmt_host_facts:
+        name: "{{ project_code_name }}-db"
+      register: obj_data
+
+    - name: debug
+      debug:
+        var: obj_data
+
     - name: Create/Update/Delete Check Point host object for Database
       check_point.mgmt.cp_mgmt_host:
         name: "{{ project_code_name }}-db"
