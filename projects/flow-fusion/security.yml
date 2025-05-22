@@ -22,7 +22,7 @@
 
     - name: debug
       debug:
-        var: environment
+        var: deploy_env
 
     - name: Get Check Point version
       check_point.mgmt.cp_mgmt_show_api_versions:
