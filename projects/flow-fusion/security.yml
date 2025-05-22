@@ -17,24 +17,22 @@
       check_point.mgmt.cp_mgmt_show_api_versions:
       register: ckp_api_version_information
 
-    - name: If project is deleted, find out where the host obect is in use
-      check_point.mgmt.cp_mgmt_where_used:
-        name: "{{ project_code_name }}-db"
-        details_level: standard
-      register: usage_info
+    - name: Delete rules if project is deleted
+      block:
+        - name: Get a list of rules, where this object is used
+          check_point.mgmt.cp_mgmt_where_used:
+            name: "{{ project_code_name }}-db"
+            details_level: standard
+          register: usage_info
+
+        - name: Delete all rules where this object is used
+          check_point.mgmt.cp_mgmt_access_rule:
+            name: "{{ item.rule.name }}"
+            layer: "{{ item.layer.name }}"
+            position: "{{ item.position }}"
+            state: absent
+          loop: "{{ usage_info['where-used']['used-directly']['access-control-rules'] }}"
       when: project_state == 'absent'
-
-    - name: debug
-      debug:
-        var: usage_info
-
-    - name: Delete all rules where the host object is used
-      check_point.mgmt.cp_mgmt_access_rule:
-        name: "{{ item.rule.name }}"
-        layer: "{{ item.layer.name }}"
-        position: "{{ item.position }}"
-        state: absent
-      loop: "{{ usage_info['where-used']['used-directly']['access-control-rules'] }}"
 
     - name: Create/Update/Delete Check Point host object for Database
       check_point.mgmt.cp_mgmt_host:
@@ -54,62 +52,66 @@
         - Publish Changes
         - Install Access Policy
 
-    - name: Create a new rule section for the project's rules
-      check_point.mgmt.cp_mgmt_access_section:
-        name: "{{ project_code_name }} Rules"
-        layer: "Network"
-        relative_position:
-          below: "Automation Rules"
-        state: "{{ project_state }}"
-      notify: 
-        - Publish Changes
-        - Install Access Policy
+        - name: Create a new rule section for the project's rules
+          check_point.mgmt.cp_mgmt_access_section:
+            name: "{{ project_code_name }} Rules"
+            layer: "Network"
+            relative_position:
+              below: "Automation Rules"
+            state: "{{ project_state }}"
+          notify: 
+            - Publish Changes
+            - Install Access Policy
 
-    - name: add-access-rule for ssh
-      check_point.mgmt.cp_mgmt_access_rule:
-        layer: Network
-        name: Allow SSH Access for Admins
-        relative_position:
-          below: "{{ project_code_name }} Rules"
-        enabled: true
-        action: Accept
-        track:
-          type: Log
-        source:
-          - "n.internal.192.168.206.1-24"
-        destination:
-          - "{{ project_code_name }}-db"
-        service:
-          - ssh_version_2
-        comments: "This rule is managed by Ansible"
-        vpn: Any
-        state: "{{ project_state }}"
-      notify: 
-        - Publish Changes
-        - Install Access Policy
+    - name: Add rules for the project
+      block:
 
-    - name: add-access-rule for mysql
-      check_point.mgmt.cp_mgmt_access_rule:
-        layer: Network
-        name: Allow MySQL Access for Frontend
-        relative_position:
-          below: "{{ project_code_name }} Rules"
-        enabled: true
-        action: Accept
-        track:
-          type: Log
-        source:
-          - "Any"
-        destination:
-          - "{{ project_code_name }}-db"
-        service:
-          - MySQL
-        comments: "This rule is managed by Ansible"
-        vpn: Any
-        state: "{{ project_state }}"
-      notify: 
-        - Publish Changes
-        - Install Access Policy
+        - name: add-access-rule for ssh
+          check_point.mgmt.cp_mgmt_access_rule:
+            layer: Network
+            name: Allow SSH Access for Admins
+            relative_position:
+              below: "{{ project_code_name }} Rules"
+            enabled: true
+            action: Accept
+            track:
+              type: Log
+            source:
+              - "n.internal.192.168.206.1-24"
+            destination:
+              - "{{ project_code_name }}-db"
+            service:
+              - ssh_version_2
+            comments: "This rule is managed by Ansible"
+            vpn: Any
+            state: present
+          notify: 
+            - Publish Changes
+            - Install Access Policy
+
+        - name: add-access-rule for mysql
+          check_point.mgmt.cp_mgmt_access_rule:
+            layer: Network
+            name: Allow MySQL Access for Frontend
+            relative_position:
+              below: "{{ project_code_name }} Rules"
+            enabled: true
+            action: Accept
+            track:
+              type: Log
+            source:
+              - "Any"
+            destination:
+              - "{{ project_code_name }}-db"
+            service:
+              - MySQL
+            comments: "This rule is managed by Ansible"
+            vpn: Any
+            state: "{{ project_state }}"
+          notify: 
+            - Publish Changes
+            - Install Access Policy
+      when: project_state == 'present'
 
   handlers:
 
