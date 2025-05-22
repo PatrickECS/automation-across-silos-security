@@ -20,6 +20,7 @@
     - name: Get host object details if project is absent
       cp_mgmt_host_facts:
         name: "{{ project_code_name }}-db"
+        details_level: full
       register: obj_data
 
     - name: debug
