@@ -38,7 +38,7 @@
 
         - name: Delete all rules where this object is used
           check_point.mgmt.cp_mgmt_access_rule:
-            name: "[{{ deploy_env }}] - {{ item.rule.name }}"
+            name: "{{ item.rule.name }}"
             layer: "{{ item.layer.name }}"
             position: "{{ item.position }}"
             state: absent
