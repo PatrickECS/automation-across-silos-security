@@ -20,7 +20,7 @@
     - name: If project is deleted, find out where the host obect is in use
       check_point.mgmt.cp_mgmt_where_used:
         name: "{{ project_code_name }}-db"
-        details_level: full
+        details_level: uuid
       register: usage_info
 
     - name: debug
