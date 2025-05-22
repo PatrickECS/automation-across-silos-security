@@ -32,7 +32,7 @@
       check_point.mgmt.cp_mgmt_access_rule:
         uid: "{{ item.rule }}"
         state: absent
-      loop: "{{ usage_info.where-used.used-directly.access-control-rules }}"
+      loop: "{{ usage_info['where-used']['used-directly']['access-control-rules'] }}"
 
     - name: Create/Update/Delete Check Point host object for Database
       check_point.mgmt.cp_mgmt_host:
