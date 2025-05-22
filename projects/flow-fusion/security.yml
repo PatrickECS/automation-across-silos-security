@@ -24,15 +24,15 @@
       register: usage_info
       when: project_state == 'absent'
 
+    - name: debug
+      debug:
+        var: usage_info
+
     - name: Delete all rules where the host object is used
       check_point.mgmt.cp_mgmt_access_rule:
         uid: "{{ item.rule }}"
         state: absent
-      loop: usage_info.where_used.used_directly.access_control_rules
-
-    - name: debug
-      debug:
-        var: usage_info
+      loop: "{{ usage_info.where_used.used_directly.access_control_rules }}"
 
     - name: Create/Update/Delete Check Point host object for Database
       check_point.mgmt.cp_mgmt_host:
