@@ -34,7 +34,7 @@
           loop: "{{ usage_info['where-used']['used-directly']['access-control-rules'] }}"
       when: project_state == 'absent'
 
-    - name: Create/Update/Delete Check Point host object for Database
+    - name: Manage Check Point host object for database
       check_point.mgmt.cp_mgmt_host:
         name: "{{ project_code_name }}-db"
         ipv4_address: "{{ db_host_ip }}"
@@ -52,16 +52,16 @@
         - Publish Changes
         - Install Access Policy
 
-        - name: Create a new rule section for the project's rules
-          check_point.mgmt.cp_mgmt_access_section:
-            name: "{{ project_code_name }} Rules"
-            layer: "Network"
-            relative_position:
-              below: "Automation Rules"
-            state: "{{ project_state }}"
-          notify: 
-            - Publish Changes
-            - Install Access Policy
+    - name: Create a new rule section for the project's rules
+      check_point.mgmt.cp_mgmt_access_section:
+        name: "{{ project_code_name }} Rules"
+        layer: "Network"
+        relative_position:
+          below: "Automation Rules"
+        state: "{{ project_state }}"
+      notify: 
+        - Publish Changes
+        - Install Access Policy
 
     - name: Add rules for the project
       block:
