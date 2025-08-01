@@ -1,6 +1,6 @@
 ---
 - name: Manage Firewall
-  hosts: smartcenter-api
+  hosts: Arrowlab-CP-MGMT
   gather_facts: False
 
   vars:
